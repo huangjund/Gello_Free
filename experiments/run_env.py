@@ -41,6 +41,7 @@ class Args:
     data_dir: str = "~/bc_data"
     bimanual: bool = False
     verbose: bool = False
+    gripper: bool = False
 
 
 def main(args):
@@ -106,7 +107,7 @@ def main(args):
         if args.agent == "gello":
             gello_port = args.gello_port
             if gello_port is None:
-                usb_ports = glob.glob("/dev/serial/by-id/*")
+                usb_ports = glob.glob("COM9")
                 print(f"Found {len(usb_ports)} ports")
                 if len(usb_ports) > 0:
                     gello_port = usb_ports[0]
@@ -149,7 +150,7 @@ def main(args):
     print("Going to start position")
     start_pos = agent.act(env.get_obs())
     obs = env.get_obs()
-    joints = obs["joint_positions"]
+    joints = obs["joint_positions"][0:6]
 
     abs_deltas = np.abs(start_pos - joints)
     id_max_joint_delta = np.argmax(abs_deltas)
@@ -179,15 +180,15 @@ def main(args):
     for _ in range(25):
         obs = env.get_obs()
         command_joints = agent.act(obs)
-        current_joints = obs["joint_positions"]
+        current_joints = obs["joint_positions"][0:6]
         delta = command_joints - current_joints
         max_joint_delta = np.abs(delta).max()
         if max_joint_delta > max_delta:
             delta = delta / max_joint_delta * max_delta
-        env.step(current_joints + delta)
+        env.step(np.append(current_joints + delta, 0))
 
     obs = env.get_obs()
-    joints = obs["joint_positions"]
+    joints = obs["joint_positions"][0:6]
     action = agent.act(obs)
     if (action - joints > 0.5).any():
         print("Action is too big")
@@ -239,7 +240,7 @@ def main(args):
                 save_path = None
             else:
                 raise ValueError(f"Invalid state {state}")
-        obs = env.step(action)
+        obs = env.step(np.append(action,0))
 
 
 if __name__ == "__main__":
