@@ -103,16 +103,30 @@ PORT_CONFIG_MAP: Dict[str, DynamixelRobotConfig] = {
         joint_signs=(1, 1, -1, 1, 1, 1),
         gripper_config=(7, 286, 248),
     ),
+    # # Right UR AB1 sim
+    # "COM9": DynamixelRobotConfig(
+    #     joint_ids=(1, 2, 3, 4, 5, 6),
+    #     joint_offsets=(
+    #         np.pi/180*265,
+    #         np.pi / 2,
+    #         3*np.pi / 2,
+    #         np.pi * 2 + np.pi / 2,
+    #         np.pi/180*268 + np.pi/2,
+    #         np.pi/180*315,
+    #     ),
+    #     joint_signs=(1, 1, -1, 1, 1, 1),
+    #     gripper_config=(7, 286, 248),
+    # ),
     # Right UR AB1
     "COM9": DynamixelRobotConfig(
         joint_ids=(1, 2, 3, 4, 5, 6),
         joint_offsets=(
-            np.pi/180*265,
+            np.pi / 180 * 129,
             np.pi / 2,
-            3*np.pi / 2,
-            np.pi / 2,
-            np.pi/180*268 + np.pi/2,
-            np.pi/180*220,
+            3 * np.pi / 2,
+            np.pi * 2 + np.pi / 2,
+            np.pi / 180 * 268 + np.pi / 2,
+            np.pi / 180 * 220,
         ),
         joint_signs=(1, 1, -1, 1, 1, 1),
         gripper_config=(7, 286, 248),

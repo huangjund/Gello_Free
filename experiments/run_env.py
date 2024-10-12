@@ -118,12 +118,13 @@ def main(args):
                     )
             if args.start_joints is None:
                 reset_joints = np.deg2rad(
-                    [0, -90, 90, -90, -90, 0, 0]
+                    [137, -90, 90, -90, -90, 90]
                 )  # Change this to your own reset joints
             else:
                 reset_joints = args.start_joints
             agent = GelloAgent(port=gello_port, start_joints=args.start_joints)
-            curr_joints = env.get_obs()["joint_positions"]
+            curr_joints = np.array(env.get_obs()["joint_positions"])
+            reset_joints = np.array(reset_joints)
             if reset_joints.shape == curr_joints.shape:
                 max_delta = (np.abs(curr_joints - reset_joints)).max()
                 steps = min(int(max_delta / 0.01), 100)
@@ -185,7 +186,8 @@ def main(args):
         max_joint_delta = np.abs(delta).max()
         if max_joint_delta > max_delta:
             delta = delta / max_joint_delta * max_delta
-        env.step(np.append(current_joints + delta, 0))
+        # env.step(np.append(current_joints + delta, 0))
+        env.step(current_joints + delta)
 
     obs = env.get_obs()
     joints = obs["joint_positions"][0:6]
@@ -240,7 +242,8 @@ def main(args):
                 save_path = None
             else:
                 raise ValueError(f"Invalid state {state}")
-        obs = env.step(np.append(action,0))
+        # obs = env.step(np.append(action,0))
+        obs = env.step(action)
 
 
 if __name__ == "__main__":
